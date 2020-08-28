@@ -1,30 +1,39 @@
 package guru.springframework.spring5webapp.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     private String title;
-    private String ibsn;
+    private String isbn;
 
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public Book() {
+    }
 
-
-    public Book() {}
-
-    public Book(String title, String ibsn, Set<Author> authors) {
+    public Book(String title, String isbn) {
         this.title = title;
-        this.ibsn = ibsn;
-        this.authors = authors;
+        this.isbn = isbn;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -35,12 +44,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getIbsn() {
-        return ibsn;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setIbsn(String ibsn) {
-        this.ibsn = ibsn;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public Set<Author> getAuthors() {
@@ -51,35 +60,16 @@ public class Book {
         this.authors = authors;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Id
-    public long getId() {
-        return id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id;
+        return id != null ? id.equals(book.id) : book.id == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "title='" + title + '\'' +
-                ", ibsn='" + ibsn + '\'' +
-                ", authors=" + authors +
-                ", id=" + id +
-                '}';
+        return id != null ? id.hashCode() : 0;
     }
 }
